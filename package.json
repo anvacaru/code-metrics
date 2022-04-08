@@ -10,5 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "solidity-code-metrics": "0.0.19"
+  },
+  "bin": {
+      "metrics": "src/index.js"
   }
 }

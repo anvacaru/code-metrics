@@ -1,9 +1,11 @@
+#!/usr/bin/env node
+
 const {SolidityMetricsContainer} = require('solidity-code-metrics');
 
 let options = {
-    basePath:"",
+    basePath:undefined,
     inputFileGlobExclusions:undefined,
-    inputFileGlob: undefined,
+    inputFileGlob: "**/*.sol",
     inputFileGlobLimit: undefined,
     debug:false,
     repoInfo: {
@@ -15,9 +17,12 @@ let options = {
 
 let metrics = new SolidityMetricsContainer("metricsContainerName", options);
 
+var filenames = [];
+
 process.argv.slice(1,).forEach(f => {
     if(f.endsWith(".sol")){
         // analyze files
+        filenames.push(f);
         metrics.analyze(f);
     }
 });
@@ -25,8 +30,8 @@ process.argv.slice(1,).forEach(f => {
 console.log("| file | lines | nLines | nSLOC | Comment Lines | Complexity Score |")
 console.log("|------|-------|--------|-------|---------------|------------------|")
 
-metrics.metrics.forEach(f => {
-    var message = "| name | "
+metrics.metrics.forEach((f, fileId) => {
+    var message = "| " + filenames[fileId] + " | "
         message += f.metrics.sloc.total + " | "
         message += f.metrics.nsloc.total + " | "
         message += f.metrics.nsloc.source + " | "
